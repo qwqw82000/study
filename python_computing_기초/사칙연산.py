@@ -1,8 +1,9 @@
+import pdb
 while(True):
     a = int(input("첫 번째 숫자 입력: "))
     b = int(input("두 번째 숫자 입력: "))
     ch = input("계산할 연산자 입력")
-
+    breakpoint()
     if (ch == "+"):
         print("%d + %d = %d 입니다. " %(a,b,a+b))
     elif (ch == "-"):
@@ -17,6 +18,7 @@ while(True):
     elif (ch == "//"):
         print("%d // %d = %d 입니다. " %(a,b,a//b))
     elif (ch == "**"):
+        set_trace()
         print("%d ** %d = %d 입니다. " %(a,b,a**b))
     
 
