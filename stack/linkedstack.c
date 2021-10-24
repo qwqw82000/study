@@ -39,7 +39,7 @@ void push(LinkedStackType* s, element item){
 }
 
 element pop(LinkedStackType* s){
-	if (is_empty(s)){//1
+	if (is_empty(s)){
 		fprintf(stderr, "Stack is empty\n");
 		exit(1);
 	}
@@ -61,8 +61,10 @@ element peek(LinkedStackType* s){
 		
 }
 
+
 void main()
 {
+	
 	LinkedStackType s;
 	init(&s);
 	push(&s, 1);
