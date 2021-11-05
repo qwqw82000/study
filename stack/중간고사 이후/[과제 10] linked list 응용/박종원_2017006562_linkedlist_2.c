@@ -1,16 +1,21 @@
+// 지하철 문제
 #include <stdio.h>
 
 #include <stdlib.h>
 
+#include <string.h>
+
  
 
-typedef char element;
+typedef int element;
 
  
 
 typedef struct ListNode {
 
-	element data;
+	char data[20];
+
+	element dist;
 
 	struct  ListNode* link;
 
@@ -18,15 +23,16 @@ typedef struct ListNode {
 
  
 
-ListNode* create_node(element data) {
+ListNode* create_node(char* station ,element data) {
 
 	ListNode* new_node;
 
 	new_node = (ListNode*)malloc(sizeof(ListNode));
 
- 
+	strcpy(new_node->data, station);// 역이름 복사
 
-	new_node->data = data; // 데이터 입력
+
+	new_node->dist = data; // 데이터 입력
 
 	new_node->link = NULL; // NULL 링크 입력
 
@@ -46,7 +52,7 @@ ListNode* create_node(element data) {
 
  
 
-void insert_node(ListNode** phead, ListNode* p, ListNode* new_node) {
+void insert_node(ListNode** phead, ListNode* p, ListNode* new_node, int time) {
 
 	if (*phead == NULL) { // 공백리스트인 경우
 
@@ -60,6 +66,8 @@ void insert_node(ListNode** phead, ListNode* p, ListNode* new_node) {
 
 		new_node->link = *phead;
 
+		p->dist = time;
+
 		*phead = new_node;
 
 	}
@@ -67,6 +75,8 @@ void insert_node(ListNode** phead, ListNode* p, ListNode* new_node) {
 	else {               // p 다음에 삽입
 
 		new_node->link = p->link;
+
+		p->dist = time;
 
 		p->link = new_node;
 
@@ -84,7 +94,7 @@ void insert_node(ListNode** phead, ListNode* p, ListNode* new_node) {
 
  
 
-void remove_node(ListNode** phead, ListNode* p, ListNode* removed) {
+void remove_node(ListNode** phead, ListNode* p, ListNode* removed, int time) {
 
 	if (p == NULL) // 공백리스트인 경우
 
@@ -93,6 +103,7 @@ void remove_node(ListNode** phead, ListNode* p, ListNode* removed) {
 	else           // p 다음 노드 제거
 
 		p->link = removed->link;
+		p->dist = time;
 
 	free(removed);
 
@@ -108,7 +119,7 @@ void display(ListNode* head) {
 
 	while (p != NULL) {
 
-		printf("%c->", p->data);
+		printf("%s(%d)->", p->data, p->dist);
 
 		p = p->link; // p를 다음 노드로 이동
 
@@ -118,7 +129,26 @@ void display(ListNode* head) {
 
 }
 
+
+void Time(ListNode* head) {
+
+	ListNode* p = head;
+	int time = 0;
+	p = p->link;
+
  
+
+	while (p != NULL) {
+
+		time += p->dist;
+
+		p = p->link; // p를 다음 노드로 이동
+
+	}
+
+	printf("From Aewol to Seongsan: %d\n",time);
+
+} 
 
 void display_recur(ListNode* head) {
 
@@ -138,7 +168,7 @@ void display_recur(ListNode* head) {
 
  
 
-ListNode* search(ListNode* head, int x) {
+ListNode* search(ListNode* head, char *station) {
 
 	ListNode* p;
 
@@ -148,7 +178,7 @@ ListNode* search(ListNode* head, int x) {
 
 	while (p != NULL) {
 
-		if (p->data == x) return p; // 탐색 성공
+		if (strcmp(p->data,station) == 0) return p; // 탐색 성공
 
 		p = p->link;
 
@@ -231,19 +261,36 @@ ListNode* reverse(ListNode* head) {
 int main()
 
 {
-	char s1[10];
-	scanf("%s", s1);
 	ListNode* head = NULL;
+	insert_node(&head, NULL, create_node("Airport",0),0);
 
-	int i=0;
-	while (s1[i] != '\0'){
-		insert_node(&head, NULL, create_node(s1[i++]));
-
-	}
 	display(head);
-	ListNode* reverse_head = reverse(head);
-	display(reverse_head);
 
+	insert_node(&head, search(head, "Airport"), create_node("Aewol",0),20);
+	display(head);
+
+	insert_node(&head, search(head, "Aewol"), create_node("Seogwipo",0),40);
+	display(head);
+
+	insert_node(&head, search(head, "Seogwipo"), create_node("Seongsan",0),30);
+	display(head);
+
+	insert_node(&head, search(head, "Aewol"), create_node("Moseulpo",30),30);
+	display(head);
+
+	Time(head);
+
+	remove_node(&head, search(head, "Aewol"), search(head, "Moseulpo"),40);
+
+	display(head);
+
+	Time(head);
+
+
+
+
+
+	
  
 
 	return 0;
